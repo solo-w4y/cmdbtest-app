@@ -1,20 +1,20 @@
-const {Pool, Client} = require('pg')
-// const pool = new Pool({
-//   user: 'postgres',
-//   host: 'localhost',
-//   database: 'api',
-//   password: '',
-//   port: 5432,
-// })
+const { Pool } = require('pg')
 
-const pool = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
+const pool = (() => {
+    if (process.env.NODE_ENV !== 'production') {
+        return new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: false
+        });
+    } else {
+        return new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+              }
+        });
     }
-});
-
-pool.connect();
+})();
 
 const getUsers = (request, response) => {
   pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {

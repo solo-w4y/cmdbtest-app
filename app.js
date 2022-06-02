@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(history({
   rewrites: [
     {
-      from: /^\/api\/\S*$/,
+      from: /^\/api(|\/\S*)$/,
       to: function(context) {
         return context.parsedUrl.pathname;
       }
